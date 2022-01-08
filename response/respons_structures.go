@@ -43,13 +43,15 @@ type OpenWeatherResponse struct {
 	Cod      int    `json:"cod"`
 }
 
-type ParamQuery struct {
-	Q string `json:"q"`
-}
+// type ParamQuery struct {
+// 	Q string `json:"q"`
+// }
 
 type Params struct {
 	ID   string `json:"id"`
-	Data ParamQuery
+	Data struct {
+		Q string `json:"q"`
+	}
 }
 
 type Res struct {

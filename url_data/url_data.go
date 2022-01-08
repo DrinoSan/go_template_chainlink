@@ -37,18 +37,24 @@ func Query_params(query_paramter *respons_structures.Params) *http.Request {
 		log.Fatal("Error loading .env file")
 	}
 
+	// Building the url
 	api_url := Get_url()
 
+	// Creating request to add the search parameters
 	req, err := http.NewRequest("GET", api_url.String(), nil)
 	if err != nil {
 		log.Print(err)
 		os.Exit(1)
 	}
 
+	// Creating query
 	q := req.URL.Query()
 	q.Add("q", query_paramter.Data.Q)
 	q.Add("appid", os.Getenv("appid"))
+	// In this OpwenWeatherApi we could add "units" as parameter to get normal values...
 	//q.Add("units", "metric")
+	// Encoding values in URL encoded form
+	// (q=New York&appid=123123123...)
 	req.URL.RawQuery = q.Encode()
 
 	return req
@@ -56,9 +62,10 @@ func Query_params(query_paramter *respons_structures.Params) *http.Request {
 
 func Make_api_call(req *http.Request) *http.Response {
 
+	// Finally creating the call to the api
 	r, err := http.Get(req.URL.String())
 	if err != nil {
-		log.Fatal("API CALL FAILD: ", err)
+		log.Fatal("API CALL FAILED: ", err)
 	}
 
 	return r
