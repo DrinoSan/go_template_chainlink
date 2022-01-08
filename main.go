@@ -4,66 +4,36 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"net/url"
-	"os"
 
-	respons_structures "github.com/drinosan/go_template_chainlink/response"
-
+	res_struct "github.com/drinosan/go_template_chainlink/response"
+	"github.com/drinosan/go_template_chainlink/url_data"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 
 	router := gin.Default()
 
 	// curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": 0, "data": { "q": "New York" }}'
 	// { "id": 0, "data": { "q": "New York" }}
 
-	// This handler will match /user/john but will not match /user/ or /user
 	router.POST("/", func(c *gin.Context) {
-		api_url := "https://api.openweathermap.org/data/2.5/weather"
-		u, _ := url.ParseRequestURI(api_url)
 
-		req, err := http.NewRequest("GET", u.String(), nil)
-		if err != nil {
-			log.Print(err)
-			os.Exit(1)
-		}
-		log.Println("NACH NEW REQUEST")
-
-		var newSearch respons_structures.Params
+		var newSearch res_struct.Params
 		if err := c.BindJSON(&newSearch); err != nil {
 			log.Fatal(err)
 		}
-		log.Println("NACH BIND")
 
 		newS, _ := json.MarshalIndent(&newSearch, "", "    ")
 		log.Println("Recieved to querry: ", string(newS))
 
-		q := req.URL.Query()
-		q.Add("q", newSearch.Data.Q)
-		q.Add("appid", os.Getenv("appid"))
-		//q.Add("units", "metric")
-		req.URL.RawQuery = q.Encode()
+		req := url_data.Query_params(&newSearch)
 
-		r, err := http.Get(req.URL.String())
-		if err != nil {
-			return
-		}
-
+		r := url_data.Make_api_call(req)
 		defer r.Body.Close()
-		w := new(respons_structures.OpenWeatherResponse)
 
+		w := new(res_struct.OpenWeatherResponse)
 		json.NewDecoder(r.Body).Decode(w)
-
-		if err != nil {
-			log.Panic(err)
-		}
 
 		log.Println("TEMP: ", w.Main.Temp)
 		c.IndentedJSON(200, gin.H{
