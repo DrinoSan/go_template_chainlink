@@ -24,8 +24,8 @@ contract OpenWeatherConsumer is ChainlinkClient {
      */
     constructor() public {
         setPublicChainlinkToken();
-        oracle = 0xf239Cfcbc83a3CeD712D9eAfab0D5E50aE4DB079;
-        jobId = "0daeaf73d930473a8976d4e84858bf36";
+        oracle = 0xf239Cfcbc83a3CeD712D9eAfab0D5E50aE4DB079; // YOUR ORACLE ADDRESS
+        jobId = "0daeaf73d930473a8976d4e848583333"; // YOUR jobID
         fee = 0.1 * 10**18;
     }
 
