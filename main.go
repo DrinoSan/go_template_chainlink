@@ -15,8 +15,8 @@ func main() {
 	router := gin.Default()
 
 	// How to send the request
-	// curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": 0, "data": { "q": "New York" }}'
-	// { "id": 0, "data": { "q": "New York" }}
+	// curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": "0", "data": { "q": "New York", "units": "metric" }}'
+	// { "id": 0, "data": { "q": "New York", "units": "metric" } }
 
 	router.POST("/", func(c *gin.Context) {
 
@@ -36,18 +36,18 @@ func main() {
 		// ID   string `json:"id"`
 		// Data ParamQuery
 		// }
-		var newSearch response_struct.Params
+		var searchParams response_struct.Params
 		// We bind the values from the request body to the struct
-		if err := c.BindJSON(&newSearch); err != nil {
+		if err := c.BindJSON(&searchParams); err != nil {
 			log.Fatal("Error while binding values", err)
 		}
 
 		// Only for logging
-		newS, _ := json.MarshalIndent(&newSearch, "", "    ")
+		newS, _ := json.MarshalIndent(&searchParams, "", "    ")
 		log.Println("Recieved to querry: ", string(newS))
 
 		// Creating querry parameters
-		req := url_data.Query_params(&newSearch)
+		req := url_data.Query_params(&searchParams)
 
 		// Finally making the call to the API
 		r := url_data.Make_api_call(req)
@@ -70,7 +70,7 @@ func main() {
 		// The chainlink node listens to this 4 fields
 		log.Println("TEMP: ", open_weather_respnse.Main.Temp)
 		c.IndentedJSON(200, gin.H{
-			"jobRunID":   newSearch.ID,
+			"jobRunID":   searchParams.ID,
 			"data":       open_weather_respnse,
 			"result":     open_weather_respnse.Main.Temp,
 			"statusCode": http.StatusOK,

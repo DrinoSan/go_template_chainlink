@@ -13,7 +13,7 @@
 - go run main.go
 
 ### Call Api Server
-- ```curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": "0", "data": { "q": "New York" }}```
+- ```curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": "0", "data": { "q": "New York", "units": "metric" }}'```
   
 #### Input
 ```json

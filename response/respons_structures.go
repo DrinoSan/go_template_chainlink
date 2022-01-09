@@ -47,10 +47,13 @@ type OpenWeatherResponse struct {
 // 	Q string `json:"q"`
 // }
 
+// The Params struct should mirror the request we are sending
 type Params struct {
 	ID   string `json:"id"`
 	Data struct {
 		Q string `json:"q"`
+		// Added Units field tho choose between normal metric system and the other confusing systems.
+		Units string `json:"units"`
 	}
 }
 

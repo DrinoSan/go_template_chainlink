@@ -48,11 +48,17 @@ func Query_params(query_paramter *respons_structures.Params) *http.Request {
 	}
 
 	// Creating query
+	// Feel free to add additional
 	q := req.URL.Query()
 	q.Add("q", query_paramter.Data.Q)
 	q.Add("appid", os.Getenv("appid"))
 	// In this OpwenWeatherApi we could add "units" as parameter to get normal values...
-	//q.Add("units", "metric")
+	// You can add a new Parameter here on the fly
+	// q.Add("units", "metric")
+	// or
+	// Insert it in the respons_structures.Params as a new field and
+	q.Add("units", query_paramter.Data.Units)
+
 	// Encoding values in URL encoded form
 	// (q=New York&appid=123123123...)
 	req.URL.RawQuery = q.Encode()
